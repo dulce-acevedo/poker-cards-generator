@@ -6,8 +6,13 @@ const generate = async (url: string) => {
     .catch((e) => console.error(e));
 };
 
+const fetchData = async (): Promise<string> => {
+  return await axiosClient.get('').then((res) => res.data.exampleMessage);
+};
+
 const api = {
-  generate
+  generate,
+  fetchData
 };
 
 export default api;
