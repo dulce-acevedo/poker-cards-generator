@@ -19,8 +19,8 @@ async function step1() {
 
     const resize_image = sharp(buffer)
     .resize({
-        width: 179,
-        height: 281
+        width: 308,
+        height: 607
     })
     await resize_image.toFile("test3_resize.jpg")
 }
