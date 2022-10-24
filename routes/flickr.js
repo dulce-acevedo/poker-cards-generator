@@ -1,6 +1,7 @@
 const express = require('express');
 const https = require('https');
 const router = express.Router();
+
 router.get('/:query/:number', (req, res) => {
     const options = createFlickrOptions(req.params.query,req.params.number);
     const flickReq = https.request(options, (flickRes) => {
@@ -23,29 +24,30 @@ router.get('/:query/:number', (req, res) => {
     });
     flickReq.end();
 });
+
 const flickr = {
- method: 'flickr.photos.search',
- api_key: "6acbc768b71411be47c153d1aeb956d4",
- format: "json",
- media: "photos",
- nojsoncallback: 1
+    method: 'flickr.photos.search',
+    api_key: "6acbc768b71411be47c153d1aeb956d4",
+    format: "json",
+    media: "photos",
+    nojsoncallback: 1
 };
 function createFlickrOptions(query,number) {
- const options = {
- hostname: 'api.flickr.com',
- port: 443,
- path: '/services/rest/?',
- method: 'GET'
+    const options = {
+    hostname: 'api.flickr.com',
+    port: 443,
+    path: '/services/rest/?',
+    method: 'GET'
  }
  const str = 'method=' + flickr.method +
- '&api_key=' + flickr.api_key +
- '&tags=' + query +
- '&per_page=' + number +
- '&format=' + flickr.format +
- '&media=' + flickr.media +
- '&nojsoncallback=' + flickr.nojsoncallback;
- options.path += str;
- return options;
+    '&api_key=' + flickr.api_key +
+    '&tags=' + query +
+    '&per_page=' + number +
+    '&format=' + flickr.format +
+    '&media=' + flickr.media +
+    '&nojsoncallback=' + flickr.nojsoncallback;
+    options.path += str;
+    return options;
 } 
 
 //Various font sizes used to fit URL on screen
@@ -53,13 +55,15 @@ function parsePhotoRsp(rsp) {
     let s = "";
     for (let i = 0; i < rsp.photos.photo.length; i++) {
     photo = rsp.photos.photo[i];
-    t_url = `https://farm${photo.farm}.staticflickr.com/${photo.server}/${photo.id}_${photo.secret}_t.jpg`;
+    t_url = `https://farm${photo.farm}.staticflickr.com/${photo.server}/${photo.id}_${photo.secret}_c.jpg`;
+    console.log(t_url);
     p_url = `https://www.flickr.com/photos/${photo.owner}/${photo.id}`;
     s += `<a><img alt="${photo.title}" src="${t_url}"/></a>`;
     }
     return s;
-   }
-   function createPage(title,rsp) {
+}
+
+function createPage(title,rsp) {
     const number = rsp.photos.photo.length;
     const imageString = parsePhotoRsp(rsp);
     //Headers and opening body, then main content and close
@@ -71,8 +75,9 @@ function parsePhotoRsp(rsp) {
     imageString +
     '</body></html>';
     return str;
-   }
-   module.exports = router; 
+}
+
+module.exports = router; 
 
 
 
