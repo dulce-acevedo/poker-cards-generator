@@ -4,7 +4,7 @@ const axios = require('axios')
 const sharp = require('sharp')
 
 const image = 'test3_original.jpg'
-const card = 'jpg_cards/clubs_queen.jpg'
+const card = 'cards/2_of_clubs.jpg'
 
 const suits = ["clubs", "diamonds", "hearts", "spades", "red", "black"]
 const values = ["ace", "jack", "queen", "king", "joker"]
@@ -31,7 +31,7 @@ async function step2() {
     .composite([
         {input: 'test3_resize.jpg'} 
     ])
-    await card_image.toFile("diamonds_4_new.jpg")
+    await card_image.toFile("uwu.jpg")
     .then(() => console.log("done..."))
 }
 
