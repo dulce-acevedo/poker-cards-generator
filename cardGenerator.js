@@ -22,16 +22,16 @@ async function step1() {
         width: 179,
         height: 281
     })
-    await resize_image.toFile("test3_resize.jpg")
+    await resize_image.toFile("new_cards/test3_resize.jpg")
 }
 
 async function step2() {
 
     const card_image = sharp(card)
     .composite([
-        {input: 'test3_resize.jpg'} 
+        {input: 'new_cards/test3_resize.jpg'} 
     ])
-    await card_image.toFile("uwu.jpg")
+    await card_image.toFile("new_cards/uwu.jpg")
     .then(() => console.log("done..."))
 }
 
