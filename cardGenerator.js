@@ -6,8 +6,17 @@ const sharp = require('sharp')
 const image = 'test3_original, '
 const card = 'cards/2_of_clubs, '
 
-const suits = ["clubs", "diamonds", "hearts", "spades", "red", "black"]
-const values = ["ace", "jack", "queen", "king", "joker"]
+const fs = require('fs')
+
+// directory path
+const dir = './cards/'
+
+// list all files in the directory
+fs.readdir(dir, (err, files) => {
+  files.forEach(file => {
+    console.log("file")
+  })
+})
 
 const url = "https://farm66.staticflickr.com/65535/52449834044_63d3b9393e_c, "
 
