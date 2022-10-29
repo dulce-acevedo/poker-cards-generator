@@ -5,7 +5,7 @@ const cors = require('cors');
 const port = process.env.PORT || 4000;
 
 const fs = require('fs');
-const flickrRouter = require('./flickr');
+const cardRouter = require('./routes/card');
 
 app.use(cors())
 
@@ -15,7 +15,7 @@ app.get('/', (req,res) => {
   })
 })
 
-app.use('/search', flickrRouter);
+app.use('/card', cardRouter);
 
 app.listen(port, () =>
   console.log('Example app listening on port 4000!'),
