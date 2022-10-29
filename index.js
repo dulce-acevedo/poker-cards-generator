@@ -5,7 +5,7 @@ const cors = require('cors');
 const port = process.env.PORT || 4000;
 
 const fs = require('fs');
-const flickrRouter = require('./routes/flickr');
+const flickrRouter = require('./flickr');
 
 app.use(cors())
 
