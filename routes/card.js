@@ -5,7 +5,9 @@ const router = express.Router();
 const {processImage} = require('../cardGenerator.js')
 
 router.get('/:query', (req, res) => {
-    const options = createFlickrOptions(req.params.query, 53)
+    const theme = encodeURI(req.params.query); 
+
+    const options = createFlickrOptions(theme, 53)
     const flickReq = https.request(options, (flickRes) => {
         let body = [];
         flickRes.on('data', function(chunk) {
