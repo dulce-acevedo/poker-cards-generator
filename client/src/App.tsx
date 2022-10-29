@@ -21,7 +21,7 @@ function App() {
     await client
       .get(url)
       .then((res) => {
-        console.log(data);
+        console.log(res.data);
         return setData(res.data.exampleMessage);
       })
       .catch((e) => {

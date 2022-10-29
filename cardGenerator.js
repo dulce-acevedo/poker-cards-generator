@@ -17,28 +17,32 @@ async function step1() {
     const imageResponse = await axios({url: url, responseType: 'arraybuffer'})
     const buffer = Buffer.from(imageResponse.data, 'binary') 
 
-    const resize_image = sharp(buffer)
+    sharp(buffer)
     .resize({
         width: 308,
         height: 607
     })
-    await resize_image.toFile("new_cards/test3_resize.jpg")
+    .toBuffer({resolveWithObject: true})
+    .then(({ data, info }) =>{
+        sharp(card)
+        .composite([
+            {input: data} 
+        ])
+        .toFile("new_cards/uwu.jpg")
+    })
 }
 
-async function step2() {
+async function step2(buffer) {
 
-    const card_image = sharp(card)
-    .composite([
-        {input: 'new_cards/test3_resize.jpg'} 
-    ])
-    await card_image.toFile("new_cards/uwu.jpg")
-    .then(() => console.log("done..."))
+    
 }
 
-async function processImage(){
-    await step1();
-    await step2();
+
+async function processImage() {
+    step2(step1())
+
 }
+
 
 
 processImage();
