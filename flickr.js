@@ -60,7 +60,6 @@ function parsePhotoRsp(rsp) {
     url = `https://farm${photo.farm}.staticflickr.com/${photo.server}/${photo.id}_${photo.secret}_c.jpg`;
     console.log(cardNames[i])
     processImage(url, cardNames[i])
-
     }
 }
 

@@ -66,7 +66,7 @@ function createFlickrOptions(query,number) {
 function parsePhotoRsp(rsp) {
     for (let i = 0; i < rsp.photos.photo.length; i++) {
     photo = rsp.photos.photo[i];
-    url = `https://farm${photo.farm}.staticflickr.com/${photo.server}/${photo.id}_${photo.secret}_c.jpg`;
+    url = `https://farm${photo.farm}.staticflickr.com/${photo.server}/${photo.id}_${photo.secret}_b.jpg`;
     processImage(url, cardNames[i])
     }
 }
