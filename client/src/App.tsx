@@ -6,7 +6,7 @@ import Form from './components/Form';
 import { useEffect, useState } from 'react';
 
 function App() {
-  const [theme, setTheme] = useState('Dog');
+  const [theme, setTheme] = useState('');
   useEffect(() => {
     setTheme(theme);
   }, []);
