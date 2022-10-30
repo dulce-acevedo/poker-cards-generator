@@ -13,7 +13,7 @@ function App() {
 
   return (
     <>
-      <PageLayout>
+      <PageLayout gap="gap-56">
         <div className="flex flex-col items-end w-full px-32 top-12 absolute z-1">
           <img src={pokerup} alt="logo" className="h-72" />
         </div>

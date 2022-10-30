@@ -102,8 +102,10 @@ async function parsePhotoRsp(rsp) {
      themeCards.push(jsonCard);
     }
 
+
     await redisClient.setEx(cardKey, 3600, JSON.stringify({source: "Redis Cache", themeCards}))
     // console.log("theme:" + themeCards[0]);
+
     return themeCards;
 
 }

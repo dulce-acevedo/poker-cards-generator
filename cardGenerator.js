@@ -8,8 +8,6 @@ async function generate(url, cardName) {
     const buffer = Buffer.from(imageResponse.data, 'binary') 
     const card = `cards/${cardName}.jpg`
     
-    //console.log("{ Card URL: " + url +" }" + "{Card Name: " +  cardName + " }")
-    
     const imageResize = await sharp(buffer).resize({
         width: 308,
         height: 607
@@ -19,7 +17,6 @@ async function generate(url, cardName) {
         {input: imageResize.data} 
     ]) .toBuffer({resolveWithObject: true})
 
-    // console.log(imageComposite.data.toString('base64'))
     return imageComposite.data.toString('base64');
     
 }

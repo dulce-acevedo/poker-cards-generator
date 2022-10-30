@@ -1,6 +1,8 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import axios from 'axios';
 import { Dispatch, SetStateAction } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 interface AppProps {
   theme: string;
   setTheme: Dispatch<SetStateAction<string>>;
@@ -9,16 +11,15 @@ const Form = (props: AppProps) => {
   const hostname = '127.0.0.1';
   const port = String(import.meta.env.VITE_PORT);
   const url = `http://${hostname}:${port}/`;
+  const navigate = useNavigate();
 
   const client = axios.create({
     baseURL: url
   });
 
   async function submitTheme() {
-    console.log(props.theme);
     await client.get(`/card/${props.theme}`).then((res) => {
-      console.log('cards received yay');
-      console.log(res.data);
+      navigate('/results', { state: { data: res.data } });
     });
   }
 

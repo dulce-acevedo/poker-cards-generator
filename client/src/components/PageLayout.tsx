@@ -1,10 +1,11 @@
 import Footer from './Footer';
 import Header from './Header';
 
-const PageLayout = (props: { children?: React.ReactNode }) => {
-  const { children } = props;
+const PageLayout = (props: { children?: React.ReactNode; gap: string }) => {
+  const { children, gap } = props;
+  const classData = `grid grid-rows-[auto,1fr,auto] min-h-screen ${gap}`;
   return (
-    <div className="grid grid-rows-[auto,1fr,auto] min-h-screen gap-56 ">
+    <div className={classData}>
       <Header />
       <div className="">{children}</div>
       <Footer />
