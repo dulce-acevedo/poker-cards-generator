@@ -20,7 +20,6 @@ router.get('/:query', (req, res) => {
             const bodyString = body.join('')
             const rsp = JSON.parse(bodyString)
             const s = await parsePhotoRsp(rsp);
-            console.log(s)
             res.send(s)
             res.end()
         }) 
@@ -75,8 +74,6 @@ async function parsePhotoRsp(rsp) {
     let jsonCard = {name: `${cardNames[i]}`, buffer: `${themeCard}`}
     themeCards.push(jsonCard);
     }
-
-    // console.log("theme:" + themeCards[0]);
     return themeCards;
 
 }
