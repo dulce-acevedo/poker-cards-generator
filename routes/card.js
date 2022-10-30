@@ -3,33 +3,60 @@ const https = require('https');
 const router = express.Router();
 const { processImage } = require('../cardGenerator.js')
 
+const redis = require('redis')
 
-router.get('/:query', (req, res) => {
-    const theme = encodeURI(req.params.query); 
+const redisClient = redis.createClient();
+(async () => {
+    try {
+        await redisClient.connect();
+    } catch (err) {
+        console.log(err)
+    }
+})();
 
-    const options = createFlickrOptions(theme, 53)
-    const flickReq = https.request(options, async (flickRes) => {
-        let body = [];
-        flickRes.on('data', function(chunk) {
-            body.push(chunk)
+let theme;
+let cardKey
+
+
+router.get('/:query', async (req, res) => {
+     theme = encodeURI(req.params.query); 
+     cardKey = `CardKey:${theme}`;
+     const redisCacheResult = await redisClient.get(cardKey)
+     console.log("Theme: ", theme)
+
+
+     if(redisCacheResult) {
+        const resultJSON = JSON.parse(redisCacheResult)
+        //console.log("This is from redis ", resultJSON)
+
+        res.json(resultJSON)
+     }
+     else
+     {
+        const options = createFlickrOptions(theme, 53)
+        const flickReq = https.request(options, async (flickRes) => {
+            let body = [];
+            flickRes.on('data', function(chunk) {
+                body.push(chunk)
+            })
+            flickRes.on('end', async function() {
+                // res.writeHead(flickRes.statusCode,{'content-type' :
+                // 'text/html'});
+
+                const bodyString = body.join('')
+                const rsp = JSON.parse(bodyString)
+                const s = await parsePhotoRsp(rsp);
+                console.log(s)
+                res.send(s)
+                res.end()
+            }) 
+        });
+
+        flickReq.on('error', (e) => {
+            console.error(e);
         })
-        flickRes.on('end', async function() {
-            // res.writeHead(flickRes.statusCode,{'content-type' :
-            // 'text/html'});
-
-            const bodyString = body.join('')
-            const rsp = JSON.parse(bodyString)
-            const s = await parsePhotoRsp(rsp);
-            res.send(s)
-            res.end()
-        }) 
-    });
-
-    flickReq.on('error', (e) => {
-        console.error(e);
-    })
-    flickReq.end();
-    
+        flickReq.end();
+    }
     
 })
 
@@ -65,15 +92,20 @@ async function parsePhotoRsp(rsp) {
     "5s","6c","6d","6h","6s","7c","7d","7h","7s","8c","8d","8h","8s","9c","9d","9h","9s","10c","10d","10h","10s",
     "ac","ad","ah","as","bj","jc","jd","jh","js","kc","kd","kh","ks","qc","qd","qh","qs"]
     // cardNames=["2c"]
-    let themeCards = [];
+    themeCards = [];
 
     for (let i = 0; i < rsp.photos.photo.length; i++) {
     photo = rsp.photos.photo[i];
     url = `https://farm${photo.farm}.staticflickr.com/${photo.server}/${photo.id}_${photo.secret}_b.jpg`;
     let themeCard = await processImage(url, cardNames[i]);
     let jsonCard = {name: `${cardNames[i]}`, buffer: `${themeCard}`}
-    themeCards.push(jsonCard);
+     themeCards.push(jsonCard);
     }
+
+
+    await redisClient.setEx(cardKey, 3600, JSON.stringify({source: "Redis Cache", themeCards}))
+    // console.log("theme:" + themeCards[0]);
+
     return themeCards;
 
 }
