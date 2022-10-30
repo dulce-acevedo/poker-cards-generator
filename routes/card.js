@@ -27,9 +27,9 @@ router.get('/:query', async (req, res) => {
 
      if(redisCacheResult) {
         const resultJSON = JSON.parse(redisCacheResult)
-        //console.log("This is from redis ", resultJSON)
-
-        res.json(resultJSON)
+        console.log("resultJSON.themecards: ", resultJSON.themeCards);
+        res.send(resultJSON.themeCards);
+        
      }
      else
      {
@@ -40,9 +40,6 @@ router.get('/:query', async (req, res) => {
                 body.push(chunk)
             })
             flickRes.on('end', async function() {
-                // res.writeHead(flickRes.statusCode,{'content-type' :
-                // 'text/html'});
-
                 const bodyString = body.join('')
                 const rsp = JSON.parse(bodyString)
                 const s = await parsePhotoRsp(rsp);
@@ -91,7 +88,6 @@ async function parsePhotoRsp(rsp) {
     cardNames=["2c","2d","2h","2s","3c","3d","3h","3s","4c","4d","4h","4s","5c","5d","5h",
     "5s","6c","6d","6h","6s","7c","7d","7h","7s","8c","8d","8h","8s","9c","9d","9h","9s","10c","10d","10h","10s",
     "ac","ad","ah","as","bj","jc","jd","jh","js","kc","kd","kh","ks","qc","qd","qh","qs"]
-    // cardNames=["2c"]
     themeCards = [];
 
     for (let i = 0; i < rsp.photos.photo.length; i++) {
@@ -104,7 +100,6 @@ async function parsePhotoRsp(rsp) {
 
 
     await redisClient.setEx(cardKey, 3600, JSON.stringify({source: "Redis Cache", themeCards}))
-    // console.log("theme:" + themeCards[0]);
 
     return themeCards;
 
