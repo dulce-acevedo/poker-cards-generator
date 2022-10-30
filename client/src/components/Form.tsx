@@ -18,6 +18,7 @@ const Form = (props: AppProps) => {
     console.log(props.theme);
     await client.get(`/card/${props.theme}`).then((res) => {
       console.log('cards received yay');
+      console.log(res.data);
     });
   }
 

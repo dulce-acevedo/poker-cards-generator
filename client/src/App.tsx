@@ -10,6 +10,7 @@ function App() {
   useEffect(() => {
     setTheme(theme);
   }, []);
+
   return (
     <>
       <PageLayout>
