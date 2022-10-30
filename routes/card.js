@@ -3,6 +3,9 @@ const https = require('https');
 const router = express.Router();
 const { processImage } = require('../cardGenerator.js')
 
+require('dotenv').config()
+const AWS = require('aws-sdk')
+
 const redis = require('redis')
 
 const redisClient = redis.createClient();
@@ -14,6 +17,26 @@ const redisClient = redis.createClient();
     }
 })();
 
+//S3 Setup
+const bucketName = "anthony-and-dulce-card-deck-storage"
+const s3 = new AWS.S3({apiVersion: "2006-03-01"})
+
+(async () => {
+    try {
+        await s3.createBucket({Bucket: bucketName}).promise();
+        console.log(`Created Bucket: ${bucketName}`);
+    } catch(err){
+        if (err.statusCode != 409){
+            console.log(`Error creating bucket: ${err}`)
+        }
+        else {
+            console.log(err)
+        }
+    }
+})()
+
+
+//Global variables
 let theme;
 let cardKey
 
@@ -21,9 +44,10 @@ let cardKey
 router.get('/:query', async (req, res) => {
      theme = encodeURI(req.params.query); 
      cardKey = `CardKey:${theme}`;
-     const redisCacheResult = await redisClient.get(cardKey)
-     console.log("Theme: ", theme)
 
+     const s3Params = {Bucket: bucketName, Key: cardKey}
+     const redisCacheResult = await redisClient.get(cardKey)
+    
 
      if(redisCacheResult) {
         const resultJSON = JSON.parse(redisCacheResult)
@@ -32,13 +56,19 @@ router.get('/:query', async (req, res) => {
         
      }
      else
-     {
-        const options = createFlickrOptions(theme, 53)
-        const flickReq = https.request(options, async (flickRes) => {
+    {
+        try{
+            
+        } catch (err){
+            const options = createFlickrOptions(theme, 53)
+            const flickReq = https.request(options, async (flickRes) => {
+
             let body = [];
+
             flickRes.on('data', function(chunk) {
                 body.push(chunk)
             })
+
             flickRes.on('end', async function() {
                 const bodyString = body.join('')
                 const rsp = JSON.parse(bodyString)
@@ -53,6 +83,8 @@ router.get('/:query', async (req, res) => {
             console.error(e);
         })
         flickReq.end();
+        }
+
     }
     
 })
