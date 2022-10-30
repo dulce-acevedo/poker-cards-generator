@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import axios from 'axios';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 interface AppProps {
@@ -12,6 +12,7 @@ const Form = (props: AppProps) => {
   const port = String(import.meta.env.VITE_PORT);
   const url = `http://${hostname}:${port}/`;
   const navigate = useNavigate();
+  const [progressBar, setProgressBar] = useState(<p></p>);
 
   const client = axios.create({
     baseURL: url
@@ -41,6 +42,7 @@ const Form = (props: AppProps) => {
         <button
           onClick={() => {
             submitTheme();
+            setProgressBar(<progress className="progress w-56"></progress>);
           }}
           type="submit"
           className="btn btn-md mx-10"
@@ -49,6 +51,7 @@ const Form = (props: AppProps) => {
         </button>
         <button className="btn btn-md">Im Feeling Lucky</button>
       </div>
+      <div className="flex flex-row justify-center pt-10">{progressBar}</div>
     </div>
   );
 };
