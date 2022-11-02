@@ -52,9 +52,7 @@ router.get('/:query', async (req, res) => {
 
      if(redisCacheResult) {
         const resultJSON = JSON.parse(redisCacheResult)
-        //console.log("resultJSON: ", resultJSON.themeCards);
         console.log("Im in the redis cache")
-        console.log("Data in redis rn: ", resultJSON)
         res.send(resultJSON.themeCards);
         
      }
@@ -64,19 +62,11 @@ router.get('/:query', async (req, res) => {
             const s3Result = await s3.getObject(s3Params).promise()
             const s3JSON = JSON.parse(s3Result.Body)
 
-          
-            
-
-
             let responseJSON =  JSON.parse(s3Result.Body)
             
             
-            
-            
             let jsonThemeCards = responseJSON
-            console.log("Data from S3 Sending to Redis: ", jsonThemeCards)
-
-            redisClient.setEx(cardKey, 3600, JSON.stringify({...jsonThemeCards}));
+            redisClient.setEx(cardKey, 3600, JSON.stringify({source: "Redis Cache",...jsonThemeCards}));
 
             console.log("Im in the S3 Cache");
 
@@ -87,7 +77,6 @@ router.get('/:query', async (req, res) => {
         } catch (err){
             if (err.statusCode === 404) {
                 const options = createFlickrOptions(theme, 53)
-                // const options = createFlickrOptions(theme, 1)
                 console.log("Im in the flickr api")
                 const flickReq = https.request(options, async (flickRes) => {
 
@@ -149,7 +138,7 @@ async function parsePhotoRsp(rsp) {
     cardNames=["2c","2d","2h","2s","3c","3d","3h","3s","4c","4d","4h","4s","5c","5d","5h",
     "5s","6c","6d","6h","6s","7c","7d","7h","7s","8c","8d","8h","8s","9c","9d","9h","9s","10c","10d","10h","10s",
     "ac","ad","ah","as","bj","jc","jd","jh","js","kc","kd","kh","ks","qc","qd","qh","qs"]
-    // cardNames=["2c"]
+
     themeCards = [];
 
     for (let i = 0; i < rsp.photos.photo.length; i++) {
@@ -171,19 +160,6 @@ async function parsePhotoRsp(rsp) {
     return themeCards;
 
 }
-
-// function createPage(title,rsp) {
-//     const number = rsp.photos.photo.length;
-//     parsePhotoRsp(rsp);
-//     //Headers and opening body, then main content and close
-//     const str = '<!DOCTYPE html>' +
-//     '<html><head><title>Flickr JSON</title></head>' +
-//     '<body>' +
-//     '<h1>' + title + '</h1>' +
-//     'Total number of entries is: ' + number + '</br>' +
-//     '</body></html>';
-//     return str;
-// }
 
 
 
