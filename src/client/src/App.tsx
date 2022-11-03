@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import PageLayout from './components/PageLayout';
-import poker from '../public/poker-deck.png';
-import pokerup from '../public/poker-card.png';
+import poker from './images/poker-deck.png';
+import pokerup from './images/poker-card.png';
 import Form from './components/Form';
 import { useEffect, useState } from 'react';
 
