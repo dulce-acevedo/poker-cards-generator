@@ -3,10 +3,9 @@ const https = require("https");
 const router = express.Router();
 const { processImage } = require("../cardGenerator.js");
 
-require("dotenv").config();
+//require("dotenv").config();
 const AWS = require("aws-sdk");
 const redis = require("redis");
-const { response } = require("express");
 
 //Global variables
 let theme;
@@ -95,7 +94,7 @@ router.get("/:query", async (req, res) => {
 
 const flickr = {
   method: "flickr.photos.search",
-  api_key: "6acbc768b71411be47c153d1aeb956d4",
+  api_key: process.env.FLICKR_API_KEY,
   format: "json",
   media: "photos",
   nojsoncallback: 1,
@@ -122,8 +121,7 @@ function createFlickrOptions(query, number) {
     "&media=" +
     flickr.media +
     "&nojsoncallback=" +
-    flickr.nojsoncallback +
-    "&safe_search=1";
+    flickr.nojsoncallback;
   options.path += str;
   return options;
 }
