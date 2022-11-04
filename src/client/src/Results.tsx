@@ -6,7 +6,13 @@ import { jsPDF } from 'jspdf';
 function Results() {
   const location = useLocation();
   const cards = location.state.data;
+
+  const theme = location.state.theme;
   const navigate = useNavigate();
+
+  function capitalizeFirstLetter(theme: string) {
+    return theme.charAt(0).toUpperCase() + theme.slice(1);
+  }
 
   function generatePDF(cards: any[]) {
     /* eslint-disable new-cap */
@@ -23,6 +29,10 @@ function Results() {
     <>
       <PageLayout gap="gap-20">
         <div className=" mx-40">
+          <div className="flex flex-col items-center gap-5 relative">
+            {' '}
+            <h1 className="text-5xl"> {capitalizeFirstLetter(theme)} </h1>
+          </div>
           <div className="flex w-full justify-between mb-10 p-5">
             <button
               className="btn btn-md"
