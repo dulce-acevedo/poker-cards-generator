@@ -23,7 +23,7 @@ function Results() {
       doc.addImage(image, 'JPEG', 5, 5, 100, 140, name);
       doc.addPage();
     });
-    doc.save();
+    doc.save(theme);
   }
   return (
     <>
