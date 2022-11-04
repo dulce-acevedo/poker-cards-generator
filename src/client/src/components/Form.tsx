@@ -13,19 +13,55 @@ const Form = (props: AppProps) => {
   const url = `http://${hostname}:${port}/`;
   const navigate = useNavigate();
   const [progressBar, setProgressBar] = useState(<p></p>);
+  const [errMes, setErrMes] = useState('');
 
   const client = axios.create({
     baseURL: url
   });
 
-  async function submitTheme() {
-    await client.get(`/card/${props.theme}`).then((res) => {
-      navigate(`/results:${props.theme}`, { state: { data: res.data } });
-    });
+  function validTheme(theme: string) {
+    const regex = /^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/;
+    return regex.test(theme);
   }
+
+  function loading() {
+    setProgressBar(<progress className="progress w-56"></progress>);
+    setErrMes('');
+  }
+
+  function sendError(mes: string) {
+    setProgressBar(<p></p>);
+    setErrMes(mes);
+    props.setTheme('');
+  }
+
+  async function submitTheme() {
+    loading();
+    if (validTheme(props.theme)) {
+      await client
+        .get(`/card/${props.theme.toLocaleLowerCase()}`)
+        .then((res) => {
+          if (res.data.length === 0) {
+            sendError(
+              'Sorry that theme is not available. Try again with another theme.'
+            );
+          } else {
+            navigate(`/results:${props.theme.toLocaleLowerCase()}`, {
+              state: { data: res.data, theme: props.theme }
+            });
+          }
+        });
+    } else {
+      sendError('Please use only numbers and letters');
+    }
+  }
+
   async function submitRandomTheme() {
+    loading();
     await client.get('/random').then((res) => {
-      navigate('/random-cards', { state: { data: res.data } });
+      navigate('/random-cards', {
+        state: { data: res.data, theme: props.theme }
+      });
     });
   }
 
@@ -43,11 +79,14 @@ const Form = (props: AppProps) => {
           onChange={(e) => props.setTheme(e.target.value)}
         />
       </label>
+      <div className="h-10">
+        {' '}
+        <p className=" text-red-700"> {errMes} </p>
+      </div>
       <div className="flex flex-row pt-8  justify-center">
         <button
           onClick={() => {
             submitTheme();
-            setProgressBar(<progress className="progress w-56"></progress>);
           }}
           type="submit"
           className="btn btn-md mx-10"
@@ -57,7 +96,6 @@ const Form = (props: AppProps) => {
         <button
           onClick={() => {
             submitRandomTheme();
-            setProgressBar(<progress className="progress w-56"></progress>);
           }}
           type="submit"
           className="btn btn-md mx-10"
