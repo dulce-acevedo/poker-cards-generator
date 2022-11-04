@@ -11,15 +11,6 @@ function Results() {
   function generatePDF(cards: any[]) {
     /* eslint-disable new-cap */
     const doc = new jsPDF();
-    // for (let i = 0; i < cards.length; i = i + 2) {
-    //   let image = `data:image/jpeg;base64,${cards[i].buffer}`;
-    //   let name = `${cards[i].name}`;
-    //   doc.addImage(image, 'JPEG', 5, 5, 100, 140, name);
-    //   image = `data:image/jpeg;base64,${cards[i + 1].buffer}`;
-    //   name = `${cards[i + 1].name}`;
-    //   doc.addImage(image, 'JPEG', 5, 105, 100, 140, name);
-    //   doc.addPage();
-    // }
     cards.forEach((card) => {
       const image = `data:image/jpeg;base64,${card.buffer}`;
       const name = `${card.name}`;

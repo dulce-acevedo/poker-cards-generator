@@ -11,7 +11,11 @@ const router = createBrowserRouter([
     element: <App />
   },
   {
-    path: 'results',
+    path: 'results:id',
+    element: <Results />
+  },
+  {
+    path: 'random-cards',
     element: <Results />
   }
 ]);
