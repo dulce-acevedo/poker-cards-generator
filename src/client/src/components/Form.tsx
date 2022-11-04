@@ -19,13 +19,17 @@ const Form = (props: AppProps) => {
   });
 
   async function submitTheme() {
-    await client.get(`/card/${props.theme}`).then((res) => {
-      navigate(`/results:${props.theme}`, { state: { data: res.data } });
+    await client.get(`/card/${props.theme.toLocaleLowerCase()}`).then((res) => {
+      navigate(`/results:${props.theme.toLocaleLowerCase()}`, {
+        state: { data: res.data, theme: props.theme }
+      });
     });
   }
   async function submitRandomTheme() {
     await client.get('/random').then((res) => {
-      navigate('/random-cards', { state: { data: res.data } });
+      navigate('/random-cards', {
+        state: { data: res.data, theme: props.theme }
+      });
     });
   }
 
