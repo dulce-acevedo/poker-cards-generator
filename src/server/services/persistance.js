@@ -145,15 +145,16 @@ async function persistance(res, theme, cardKey){
 
           flickRes.on("end", async function () {
             let themeCards; 
-            if (body.length === 0){
-              const bodyString = body.join("");
-              const rsp = JSON.parse(bodyString);
-              themeCards = await parsePhotoRsp(rsp);
-              await addToS3AndRedis(themeCards, cardKey);
-            }
-            else{
+            const bodyString = body.join("");
+            const rsp = JSON.parse(bodyString);
+            if (rsp.photos.photo.length === 0){
               console.log(" No result found in flickr")
               themeCards = [];
+              
+            }
+            else{
+              themeCards = await parsePhotoRsp(rsp);
+              await addToS3AndRedis(themeCards, cardKey);
             }
             res.send(themeCards);
             res.end();
