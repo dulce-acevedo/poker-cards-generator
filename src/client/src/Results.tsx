@@ -56,11 +56,14 @@ function Results() {
 
           <ul className="overflow-auto w-full relative">
             {cards.map(
-              (card: { buffer: string }, idx: Key | null | undefined) => {
-                const { buffer } = card;
+              (
+                card: { name: string; buffer: string },
+                idx: Key | null | undefined
+              ) => {
+                const { name, buffer } = card;
                 return (
                   <li key={idx} className="w-1/5 inline-grid p-5">
-                    <img src={`data:image/jpeg;base64,${buffer}`} alt="uwu" />
+                    <img src={`data:image/jpeg;base64,${buffer}`} alt={name} />
                   </li>
                 );
               }
