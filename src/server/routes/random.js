@@ -4,6 +4,7 @@ const router = express.Router();
 const { persistance } = require("../services/persistance");
 
 var randomThemes=[
+    "neverland",
     "taylor swift",
     "selena gomez",
     "puppy",
@@ -65,7 +66,9 @@ var randomThemes=[
     "marathon",
     "guitar",
     "piano",
-    "star wars"
+    "star wars",
+    "toy story 2",
+    "toy story"
 ]
 
 function random_item(randomThemes)
