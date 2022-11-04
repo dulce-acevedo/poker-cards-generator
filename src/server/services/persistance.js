@@ -3,18 +3,18 @@ const AWS = require("aws-sdk");
 const redis = require("redis");
 
 //Setup S3
-const bucketName = "anthony-and-dulce-card-deck";
-const s3 = new AWS.S3({ apiVersion: "2006-03-01", region: "ap-southeast-2" });
-(async () => {
-  try {
-    await s3.createBucket({ Bucket: bucketName }).promise();
-    console.log(`Created Bucket: ${bucketName}`);
-  } catch (err) {
-    if (err.statusCode != 409) {
-      console.log(`Error creating bucket: ${err}`);
-    }
-  }
-})();
+// const bucketName = "anthony-and-dulce-card-deck";
+// const s3 = new AWS.S3({ apiVersion: "2006-03-01", region: "ap-southeast-2" });
+// (async () => {
+//   try {
+//     await s3.createBucket({ Bucket: bucketName }).promise();
+//     console.log(`Created Bucket: ${bucketName}`);
+//   } catch (err) {
+//     if (err.statusCode != 409) {
+//       console.log(`Error creating bucket: ${err}`);
+//     }
+//   }
+// })();
 
 //Set up redis
 const redisClient = redis.createClient();
@@ -28,10 +28,10 @@ const redisClient = redis.createClient();
 
 async function addToS3AndRedis(themeCards, cardKey){
     //Add to S3
-    const body = JSON.stringify({ source: "S3 Bucket", themeCards });
-    const objectParams = { Bucket: bucketName, Key: cardKey, Body: body };
-    await s3.putObject(objectParams).promise();
-    console.log(`Successfully uploaded data to AWS to ${bucketName}/${cardKey}`);
+    // const body = JSON.stringify({ source: "S3 Bucket", themeCards });
+    // const objectParams = { Bucket: bucketName, Key: cardKey, Body: body };
+    // await s3.putObject(objectParams).promise();
+    // console.log(`Successfully uploaded data to AWS to ${bucketName}/${cardKey}`);
     //Add to Redis
     await redisClient.setEx(
         cardKey,

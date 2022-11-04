@@ -99,15 +99,8 @@ async function persistance(res, theme, cardKey){
     console.log("Getting cards from the redis cache");
     res.send(resultJSON.themeCards);
   } else {
-    try {
-      const S3Cards = await isItInS3()
-      res.send(S3Cards);
-
-    } catch (err) {
-      if (err.statusCode === 404) {
         getFromFlickr(res, theme, cardKey);
-      }
-    }
+      
   }
 }
 
