@@ -5,7 +5,7 @@ require("dotenv").config();
 
 const flickr = {
     method: "flickr.photos.search",
-    api_key: "6acbc768b71411be47c153d1aeb956d4",
+    api_key: process.env.FLICKR_API_KEY,
     format: "json",
     media: "photos",
     content_type: 0,
