@@ -10,5 +10,4 @@ router.get("/:query", async (req, res) => {
   persistance(res, theme, cardKey);
 });
 
-
 module.exports = router;
