@@ -20,7 +20,12 @@ const Form = (props: AppProps) => {
 
   async function submitTheme() {
     await client.get(`/card/${props.theme}`).then((res) => {
-      navigate('/results', { state: { data: res.data } });
+      navigate(`/results:${props.theme}`, { state: { data: res.data } });
+    });
+  }
+  async function submitRandomTheme() {
+    await client.get('/random').then((res) => {
+      navigate('/random-cards', { state: { data: res.data } });
     });
   }
 
@@ -49,7 +54,16 @@ const Form = (props: AppProps) => {
         >
           Generate
         </button>
-        <button className="btn btn-md">Im Feeling Lucky</button>
+        <button
+          onClick={() => {
+            submitRandomTheme();
+            setProgressBar(<progress className="progress w-56"></progress>);
+          }}
+          type="submit"
+          className="btn btn-md mx-10"
+        >
+          Im Feeling Lucky
+        </button>
       </div>
       <div className="flex flex-row justify-center pt-10">{progressBar}</div>
     </div>
