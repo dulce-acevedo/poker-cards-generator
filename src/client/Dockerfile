@@ -9,9 +9,9 @@ ENV AWS_SDK_LOAD_CONFIG=
 
 
 # Copy the application folder inside the container
-COPY . /src
+COPY . ./src/client
 # Set the default directory where CMD will execute
-WORKDIR /src
+WORKDIR /src/client
 
 
 COPY package*.json ./
@@ -21,4 +21,4 @@ RUN yarn
 
 EXPOSE 5173
 # Set the default command to execute when creating a new container
-CMD ["yarn", "run", "client"]
+CMD yarn --cwd src/client run dev
