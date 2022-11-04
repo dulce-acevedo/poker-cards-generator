@@ -122,7 +122,8 @@ function createFlickrOptions(query, number) {
     "&media=" +
     flickr.media +
     "&nojsoncallback=" +
-    flickr.nojsoncallback;
+    flickr.nojsoncallback +
+    "&safe_search=1";
   options.path += str;
   return options;
 }
