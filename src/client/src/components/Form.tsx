@@ -32,6 +32,7 @@ const Form = (props: AppProps) => {
   function sendError(mes: string) {
     setProgressBar(<p></p>);
     setErrMes(mes);
+    props.setTheme('');
   }
 
   async function submitTheme() {
