@@ -1,4 +1,8 @@
-export const apps = [{
+module.exports = {
+    apps: [{
     name: "cardserver",
-    script: "yarn run dev"
-}]; 
+    script: "yarn",
+    args: "run dev",
+    interpreter: 'bin/bash'
+    }]
+   } 
