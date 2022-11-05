@@ -17,6 +17,10 @@ app.get('/', (req,res) => {
 app.use('/card', cardRouter);
 app.use('/random', randomRouter);
 
-app.listen(port, () =>
+const server = app.listen(port, () =>
   console.log('Express server listening on port 4000'),
 );
+
+//This is to prevent 502 (Maybe)
+server.keepAliveTimeout = 65000;
+server.headersTimeout = 66000
