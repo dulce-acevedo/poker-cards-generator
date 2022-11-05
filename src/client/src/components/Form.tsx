@@ -8,9 +8,10 @@ interface AppProps {
   setTheme: Dispatch<SetStateAction<string>>;
 }
 const Form = (props: AppProps) => {
-  const hostname = '127.0.0.1';
-  const port = String(import.meta.env.VITE_PORT);
-  const url = `http://${hostname}:${port}/`;
+  // const hostname = '127.0.0.1';
+  // const port = String(import.meta.env.VITE_PORT);
+  const url =
+    'http://da-backend-v3-load-balancer-1099575587.ap-southeast-2.elb.amazonaws.com/';
   const navigate = useNavigate();
   const [progressBar, setProgressBar] = useState(<p></p>);
   const [errMes, setErrMes] = useState('');
