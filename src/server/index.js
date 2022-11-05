@@ -9,6 +9,11 @@ const cardRouter = require('./routes/card');
 const randomRouter = require('./routes/random');
 
 app.use(cors())
+app.get('/', (req,res) => {
+  res.send({
+    server_message: "Welcome to the card generator server"
+  })
+})
 app.use('/card', cardRouter);
 app.use('/random', randomRouter);
 
