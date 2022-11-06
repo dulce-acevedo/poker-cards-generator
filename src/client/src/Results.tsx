@@ -5,9 +5,9 @@ import { Key } from 'react';
 import { jsPDF } from 'jspdf';
 function Results() {
   const location = useLocation();
-  const cards = location.state.data;
+  const cards = location.state.cards;
 
-  const theme = location.state.theme;
+  const theme = location.state.theme.toLowerCase();
   const navigate = useNavigate();
 
   function capitalizeFirstLetter(theme: string) {
