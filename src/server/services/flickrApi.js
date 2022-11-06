@@ -44,45 +44,48 @@ return options;
 }
 
 async function parsePhotoRsp(rsp) {
-    cardNames = [ "2c", "2d", "2h", "2s", "3c", "3d", "3h", "3s", "4c", "4d", "4h", "4s", 
-    "5c", "5d", "5h", "5s", "6c", "6d", "6h", "6s", "7c", "7d", "7h", "7s", "8c", "8d", "8h", "8s", 
-    "9c", "9d", "9h", "9s", "10c", "10d", "10h", "10s", "jc", "jd", "jh", "js",
-    "qc", "qd", "qh", "qs", "kc", "kd", "kh", "ks", "ac", "ad", "ah", "as", "bj"];
+  cardNames = [ "2c", "2d", "2h", "2s", "3c", "3d", "3h", "3s", "4c", "4d", "4h", "4s", 
+  "5c", "5d", "5h", "5s", "6c", "6d", "6h", "6s", "7c", "7d", "7h", "7s", "8c", "8d", "8h", "8s", 
+  "9c", "9d", "9h", "9s", "10c", "10d", "10h", "10s", "jc", "jd", "jh", "js",
+  "qc", "qd", "qh", "qs", "kc", "kd", "kh", "ks", "ac", "ad", "ah", "as", "bj"];
 
-let themeCards = [];
+  let themeCards = [];
 
-for (let i = 0; i < rsp.photos.photo.length; i++) {
-    photo = rsp.photos.photo[i];
-    url = `https://farm${photo.farm}.staticflickr.com/${photo.server}/${photo.id}_${photo.secret}_b.jpg`;
-    let themeCard = await processImage(url, cardNames[i]);
-    let jsonCard = { name: `${cardNames[i]}`, buffer: `${themeCard}` };
-    themeCards.push(jsonCard);
+  for (let i = 0; i < rsp.photos.photo.length; i++) {
+      photo = rsp.photos.photo[i];
+      url = `https://farm${photo.farm}.staticflickr.com/${photo.server}/${photo.id}_${photo.secret}_b.jpg`;
+      let themeCard = await processImage(url, cardNames[i]);
+      let jsonCard = { name: `${cardNames[i]}`, buffer: `${themeCard}` };
+      themeCards.push(jsonCard);
+  }
+  return themeCards;
 }
-return themeCards;
-}
 
-async function getFromFlickr(res, theme, cardKey){
+async function getFromFlickr(res, theme, cardKey, data){
   const options = createFlickrOptions(theme, 53);
   console.log("Getting information from flickr api");
+
   const flickReq = https.request(options, async (flickRes) => {
     let body = [];
     flickRes.on("data", function (chunk) {
       body.push(chunk);
     });
     flickRes.on("end", async function () {
+      console.log(theme)
       let themeCards; 
       const bodyString = body.join("");
       const rsp = JSON.parse(bodyString);
       if (rsp.photos.photo.length === 0){
         console.log(" No result found in flickr")
         themeCards = [];
-        
+        data.push(themeCards);
       }
       else{
         themeCards = await parsePhotoRsp(rsp);
-        await addToS3AndRedis(themeCards, cardKey);
+        data.push(themeCards);
+        await addToS3AndRedis(data, cardKey);
       }
-      res.send(themeCards);
+      res.send(data);
       res.end();
     });
   });
@@ -93,11 +96,13 @@ async function getFromFlickr(res, theme, cardKey){
 }
 
 async function flickrImages(res, theme, cardKey){
+  let data = [[{theme: `${theme}`}]];
   const checkRedis = await isItInRedis()
   if (checkRedis) {
     const resultJSON = JSON.parse(checkRedis);
     console.log("Getting cards from the redis cache");
     res.send(resultJSON.themeCards);
+
   } else {
     try {
       const S3Cards = await isItInS3()
@@ -105,7 +110,7 @@ async function flickrImages(res, theme, cardKey){
 
     } catch (err) {
       if (err.statusCode === 404) {
-        getFromFlickr(res, theme, cardKey);
+        getFromFlickr(res, theme, cardKey, data);
       }
     }
   }
