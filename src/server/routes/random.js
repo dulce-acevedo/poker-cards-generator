@@ -1,7 +1,7 @@
 const express = require("express");
 const https = require("https");
 const router = express.Router();
-const { persistance } = require("../services/flickrApi");
+const { flickrImages } = require("../services/flickrApi");
 
 var randomThemes=[
     "neverland",
@@ -69,7 +69,7 @@ var randomThemes=[
     "star wars",
     "toy story 2",
     "toy story",
-    
+
 ]
 
 function random_item(randomThemes)
@@ -83,7 +83,7 @@ return encodeURI(randomThemes[Math.floor(Math.random()*randomThemes.length)]);
 router.get("/", async (req, res) => {
   theme = random_item(randomThemes);
   cardKey = `CardKey:${theme}`;
-  flickrApi(res, theme, cardKey);
+  flickrImages(res, theme, cardKey);
 });
 
 

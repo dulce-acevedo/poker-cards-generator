@@ -92,7 +92,7 @@ async function getFromFlickr(res, theme, cardKey){
   flickReq.end();
 }
 
-async function flickrApi(res, theme, cardKey){
+async function flickrImages(res, theme, cardKey){
   const checkRedis = await isItInRedis()
   if (checkRedis) {
     const resultJSON = JSON.parse(checkRedis);
@@ -111,4 +111,4 @@ async function flickrApi(res, theme, cardKey){
   }
 }
 
-module.exports = {flickrApi};
+module.exports = {flickrImages};
