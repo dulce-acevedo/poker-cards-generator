@@ -7,7 +7,7 @@ const { persistance } = require("../services/flickrApi");
 router.get("/:query", async (req, res) => {
   theme = encodeURI(req.params.query);
   cardKey = `CardKey:${theme}`;
-  persistance(res, theme, cardKey);
+  flickrApi(res, theme, cardKey);
 });
 
 module.exports = router;

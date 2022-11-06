@@ -68,13 +68,14 @@ var randomThemes=[
     "piano",
     "star wars",
     "toy story 2",
-    "toy story"
+    "toy story",
+    
 ]
 
 function random_item(randomThemes)
 {
   
-return randomThemes[Math.floor(Math.random()*randomThemes.length)];
+return encodeURI(randomThemes[Math.floor(Math.random()*randomThemes.length)]);
      
 }
 
@@ -82,7 +83,7 @@ return randomThemes[Math.floor(Math.random()*randomThemes.length)];
 router.get("/", async (req, res) => {
   theme = random_item(randomThemes);
   cardKey = `CardKey:${theme}`;
-  persistance(res, theme, cardKey);
+  flickrApi(res, theme, cardKey);
 });
 
 
