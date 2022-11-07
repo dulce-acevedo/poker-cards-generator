@@ -38,16 +38,17 @@ const Form = (props: AppProps) => {
   async function submitTheme() {
     loading();
     if (validTheme(props.theme)) {
+      console.log(props.theme.toLocaleLowerCase());
       await client
         .get(`/card/${props.theme.toLocaleLowerCase()}`)
         .then((res) => {
-          if (res.data.length === 0) {
+          if (res.data[1].length === 0) {
             sendError(
               'Sorry that theme is not available. Try again with another theme.'
             );
           } else {
             navigate(`/results:${props.theme.toLocaleLowerCase()}`, {
-              state: { data: res.data, theme: props.theme }
+              state: { cards: res.data[1], theme: props.theme }
             });
           }
         });
@@ -59,9 +60,18 @@ const Form = (props: AppProps) => {
   async function submitRandomTheme() {
     loading();
     await client.get('/random').then((res) => {
-      navigate('/random-cards', {
-        state: { data: res.data, theme: props.theme }
-      });
+      if (res.data[1].length === 0) {
+        sendError(
+          'Sorry there was a error with the random theme please try again'
+        );
+      } else {
+        navigate('/random-cards', {
+          state: {
+            cards: res.data[1],
+            theme: decodeURI(res.data[0][0].theme.toLocaleLowerCase())
+          }
+        });
+      }
     });
   }
 

@@ -9,6 +9,11 @@ const cardRouter = require('./routes/card');
 const randomRouter = require('./routes/random');
 
 app.use(cors())
+app.get('/', (req,res) => {
+  res.send({
+    server_message: "Welcome to the card generator server"
+  })
+})
 app.use('/card', cardRouter);
 app.use('/random', randomRouter);
 app.get("/", (req, res) => {
@@ -17,6 +22,10 @@ app.get("/", (req, res) => {
   )
 })
 
-app.listen(port, () =>
+const server = app.listen(port, () =>
   console.log('Express server listening on port 4000'),
 );
+
+//This is to prevent 502 (Maybe)
+server.keepAliveTimeout = 65000;
+server.headersTimeout = 66000
