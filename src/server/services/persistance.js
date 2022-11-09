@@ -18,23 +18,25 @@ const redisClient = redis.createClient();
 })();
 
 async function addToS3AndRedis(themeCards, cardKey){
-    //Add to S3
-    const body = JSON.stringify({ source: "S3 Bucket", themeCards });
-    const objectParams = { Bucket: bucketName, Key: cardKey, Body: body };
-    try{
-      await s3.putObject(objectParams).promise();
-      console.log(`Successfully uploaded data to AWS to ${bucketName}/${cardKey}`);
-    }
-    catch (err){
-      if (err.code === "NoSuchBucket"){
-        try {
-          await s3.createBucket({ Bucket: bucketName }).promise();
-          console.log(`Created Bucket: ${bucketName}`);
-          await s3.putObject(objectParams).promise();
-          console.log(`Successfully uploaded data to AWS to ${bucketName}/${cardKey}`);
-        } catch (err) {
-          if (err.statusCode != 409) {
-            console.log(`Error creating bucket: ${err}`);
+    //Add to S3, if S3 is available
+    if (process.env.AWS_DEV == 1){
+      const body = JSON.stringify({ source: "S3 Bucket", themeCards });
+      const objectParams = { Bucket: bucketName, Key: cardKey, Body: body };
+      try{
+        await s3.putObject(objectParams).promise();
+        console.log(`Successfully uploaded data to AWS to ${bucketName}/${cardKey}`);
+      }
+      catch (err){
+        if (err.code === "NoSuchBucket"){
+          try {
+            await s3.createBucket({ Bucket: bucketName }).promise();
+            console.log(`Created Bucket: ${bucketName}`);
+            await s3.putObject(objectParams).promise();
+            console.log(`Successfully uploaded data to AWS to ${bucketName}/${cardKey}`);
+          } catch (err) {
+            if (err.statusCode != 409) {
+              console.log(`Error creating bucket: ${err}`);
+            }
           }
         }
       }
@@ -65,12 +67,12 @@ async function getFromS3(s3Params, cardKey){
 }
 
 async function isItInRedis(){
-    return await redisClient.get(cardKey);
+  return await redisClient.get(cardKey);
 }
 
 async function isItInS3(){
-    const s3Params = { Bucket: bucketName, Key: cardKey };
-    return await getFromS3(s3Params, cardKey);
+  const s3Params = { Bucket: bucketName, Key: cardKey };
+  return await getFromS3(s3Params, cardKey);
 }
 
 module.exports = {addToS3AndRedis,  isItInRedis, isItInS3};

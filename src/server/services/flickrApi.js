@@ -105,10 +105,17 @@ async function flickrImages(res, theme, cardKey){
 
   } else {
     try {
+      // If AWS available, try to get it from there, otherwise go to flickr
+      if(process.env.AWS_DEV == 1){
       const S3Cards = await isItInS3()
       res.send(S3Cards);
+      }
+      else{
+        getFromFlickr(res, theme, cardKey, data);
+      }
 
     } catch (err) {
+      // If error ocurred getting from S3 or cant find it, get it from Flickr
       if (err.statusCode === 404) {
         getFromFlickr(res, theme, cardKey, data);
       }
